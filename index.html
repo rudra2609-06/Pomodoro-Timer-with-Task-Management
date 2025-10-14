@@ -38,25 +38,25 @@
 					<!-- Left Side -->
 					<div class="flex flex-col space-y-6 items-center justify-center bg-red- p-5">
 						<div class="clip-circle flex flex-col justify-center items-center space-y-4">
-							<h3 class="text-[#2c3e50] font-semibold text-[55px]">25:00</h3>
-							<p class="text-[#2c3e50] font-medium">Work</p>
+							<h3 id="display-time" class="text-[#2c3e50] font-semibold text-[55px]">25:00</h3>
+							<p id="display-task" class="text-[#2c3e50] font-medium">Work</p>
 						</div>
 						<div class="timer-control-btns flex items-center justify-center space-x-5">
-							<button
+							<button id="start-timer"
 								class="flex items-center py-3 px-3 bg-[#E74C3C] rounded-lg cursor-pointer text-white hover:bg-red-600 focus:ring-2 focus:ring-red-900 transition-colors duration-300">
 								<span class="pr-1.5">
 									<i class="fa-solid fa-play"></i>
 								</span>
 								Start
 							</button>
-							<button
+							<button id="pause-timer"
 								class="flex items-center py-3 px-3 bg-[#F1C71D] rounded-lg cursor-pointer text-white hover:bg-yellow-600 focus:ring-2 focus:ring-yellow-900 transition-colors duration-300">
 								<span class="pr-1.5">
 									<i class="fa-solid fa-pause"></i>
 								</span>
 								Pause
 							</button>
-							<button
+							<button id="restart-btn"
 								class="flex items-center py-3 px-3 bg-[#f4f6f7] rounded-lg cursor-pointer text-[#838f90] hover:bg-slate-200 focus:ring-2 focus:ring-slate-400 transition-colors duration-300">
 								<span class="pr-1.5">
 									<i class="fa-solid fa-rotate-right"></i>
@@ -110,20 +110,23 @@
 
 					<div class="flex items-center space-x-2">
 						<label class="font-semibold">Enter Time:</label>
-						<input type="time" id="input-time" class="mt-3 p-3 border w-full">
+						<input id="input-time" class="mt-3 p-3 border w-full" pattern="[0-9]{2}:[0-9]{2}"
+							placeholder="MM:SS (e.g., 05:30)">
 					</div>
 
 					<div class="flex justify-end space-x-3">
 						<button id="closeModal"
 							class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition">Cancel</button>
-						<button id="submit-task" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Add Task</button>
+						<button id="submit-task"
+							class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Add
+							Task</button>
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<ul>
-			
+
 		</ul>
 
 	</main>
