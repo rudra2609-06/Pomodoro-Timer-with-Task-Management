@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const restartBtn = document.getElementById("restart-btn");
 
   let count = 0;
-  let tasks = [];
+  let tasks = JSON.parse(localStorage.getItem("Tasks")) || [];
   let timer = null;
   let timeLeft = 0;
 
@@ -31,13 +31,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const enteredDescription = inputDescription.value.trim();
 
     // Validate MM:SS format
-    const timePattern = /^[0-9]{2}:[0-9]{2}$/;
-    
+    const timePattern = /^[0-9]{2}:[0-9]{2}$/; //^ :- start of the string,
+    //$ :- end of the string
+
     if (!enteredDescription) {
       alert("Please enter a task description!");
       return;
     }
-    
+
     if (!enteredTime || !timePattern.test(enteredTime)) {
       alert("Please enter time in MM:SS format (e.g., 05:30)");
       return;
@@ -49,35 +50,44 @@ document.addEventListener("DOMContentLoaded", () => {
       id: count,
       time: enteredTime,
     });
-    
+    saveTask();
+
     inputTime.value = "";
     inputDescription.value = "";
-    
-    // Display the last task
-    let lastTask = tasks[tasks.length - 1];
-    displayTime.textContent = lastTask.time;
-    showTask.textContent = lastTask.Description;
 
+    displaytimeAndDescription();
     renderTask(enteredTime, enteredDescription, count);
     closeModal();
   });
 
+  function displaytimeAndDescription() {
+    let lastTask = tasks[tasks.length - 1];
+    showTask.textContent = lastTask.Description;
+    displayTime.textContent = lastTask.time;
+  }
+
   // Convert MM:SS to total seconds
   function convertTimeToSeconds(timeString) {
-    const parts = timeString.split(':');
+    const parts = timeString.split(":");
     const minutes = parseInt(parts[0]) || 0;
     const seconds = parseInt(parts[1]) || 0;
-    return (minutes * 60) + seconds;
+    return minutes * 60 + seconds;
   }
 
   // Convert seconds back to MM:SS format
   function formatTime(totalSeconds) {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60; //remaining seconds
-    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`; //padStart takes string arguments and returns string with given padding in params.
   }
 
-  startTimerBtn.addEventListener("click", startTimer);
+  startTimerBtn.addEventListener("click", () => {
+    if (tasks.length >= 1) {
+      startTimer();
+    } else {
+      alert("Please Add Atleast One Task To Experience Pomodoro Technique");
+    }
+  });
 
   function startTimer() {
     // Don't start if already running
@@ -89,16 +99,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get the displayed time and convert to seconds
     const displayedTime = displayTime.textContent;
     timeLeft = convertTimeToSeconds(displayedTime);
-    
+
     if (isNaN(timeLeft) || timeLeft <= 0) {
       alert("Please add a task with a valid time first!");
       return;
     }
-    
+
     timer = setInterval(() => {
       timeLeft--;
       displayTime.textContent = formatTime(timeLeft);
-      
+
       if (timeLeft <= 0) {
         clearInterval(timer);
         timer = null;
@@ -120,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(timer);
       timer = null;
     }
-    
+
     // Reset to the original task time
     let lastTask = tasks[tasks.length - 1];
     if (lastTask) {
@@ -169,9 +179,34 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCount();
     console.log(tasks);
     taskElement.remove();
+    saveTask();
+    if (tasks.length === 0) {
+      resetDisplay();
+    } else {
+      displaytimeAndDescription();
+    }
   }
 
   function updateCount() {
     numberOfActiveTask.textContent = `${tasks.length} Active`;
   }
+
+  function saveTask() {
+    localStorage.setItem("Tasks", JSON.stringify(tasks));
+  }
+
+  function resetDisplay() {
+    if (tasks.length <= 0) {
+      showTask.textContent = "Work";
+      displayTime.textContent = "25:00";
+      updateCount();
+      localStorage.removeItem("Tasks");
+    }
+  }
+
+  window.addEventListener("load", () => {
+    tasks.forEach((task) => renderTask(task.time, task.Description, task.id));
+    updateCount();
+  });
 });
+

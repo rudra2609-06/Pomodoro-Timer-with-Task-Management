@@ -1,0 +1,2 @@
+//On rendering the second task is displayed and first gets removed
+//If I delete all existing task and now there is not task left. Timer by default shows last tasks details even after it is deleted
