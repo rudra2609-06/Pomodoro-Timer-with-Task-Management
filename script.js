@@ -207,6 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("load", () => {
     tasks.forEach((task) => renderTask(task.time, task.Description, task.id));
     updateCount();
+
+    if (tasks.length > 0) {
+      displaytimeAndDescription();
+    } else {
+      resetDisplay();
+    }
   });
 });
 
